@@ -3,10 +3,7 @@
 name: Update dashboard html
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '*/15 * * * *'
-  push:
-    branches: [ main ]
+  
 jobs:
   run_update:
     runs-on: ubuntu-latest
