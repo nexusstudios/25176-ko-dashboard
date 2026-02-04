@@ -4,7 +4,12 @@ copier_project: lincc-frameworks/python-project-template
 repos:  
   - repo: 25176-ko-server
     owner: nexusstudios
+    smoke-test: ci.yml
+    live-build: cd.yml
   - repo: 25176-ko-cxs
+    smoke-test: ci.yml
+    live-build: cd.yml
     owner: nexusstudios
   - repo: knockout
+    live-build: build-demo-apk.yml
     owner: facebookexternal
