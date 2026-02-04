@@ -11,5 +11,6 @@ repos:
     live-build: cd.yml
     owner: nexusstudios
   - repo: knockout
+    smoke-test: build-demo-apk.yml
     live-build: build-demo-apk.yml
     owner: facebookexternal
