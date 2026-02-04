@@ -16,7 +16,9 @@ jobs:
         with:
           python-version: '3.10'
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+            pip install -r requirements.txt
+            pip install .
       - name: Generate Dashboard
         run: python update_dashboard.py ${{ secrets.ACCESS_TOKEN }} config/tracked_workflows.yaml html/index.html
       - name: Upload Dashboard Artifact
