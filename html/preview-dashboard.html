@@ -3,22 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{page_title}}</title>
-    <link rel="icon" type="image/x-icon" href="img/favicon.png">
+    <title>LF Workflow Dashboard - Enhanced Preview</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script>
-        setTimeout(function(){
-            window.location.reload();
-        }, 60000);
-    </script>
 </head>
 <body>
 <div class="container">
     <!-- Dashboard Header -->
     <div class="dashboard-header">
-        <h1><i class="fa-solid fa-chart-line"></i> {{page_title}}</h1>
+        <h1><i class="fa-solid fa-chart-line"></i> LF Workflow Dashboard</h1>
         <p>Comprehensive GitHub Actions Workflow Monitoring</p>
     </div>
 
@@ -33,9 +27,9 @@
                     <h3>Passing Workflows</h3>
                 </div>
             </div>
-            <div class="stat-card-value success" id="passing-count">{{stats.passing_count}}</div>
+            <div class="stat-card-value success">42</div>
             <div class="stat-card-footer">
-                {{stats.passing_percent}}% of total workflows
+                84.0% of total workflows
             </div>
         </div>
 
@@ -48,9 +42,9 @@
                     <h3>Failing Workflows</h3>
                 </div>
             </div>
-            <div class="stat-card-value danger" id="failing-count">{{stats.failing_count}}</div>
+            <div class="stat-card-value danger">5</div>
             <div class="stat-card-footer">
-                {{stats.failing_percent}}% require attention
+                10.0% require attention
             </div>
         </div>
 
@@ -63,7 +57,7 @@
                     <h3>Stale Workflows</h3>
                 </div>
             </div>
-            <div class="stat-card-value warning" id="stale-count">{{stats.stale_count}}</div>
+            <div class="stat-card-value warning">3</div>
             <div class="stat-card-footer">
                 Not run recently
             </div>
@@ -78,7 +72,7 @@
                     <h3>Total Repositories</h3>
                 </div>
             </div>
-            <div class="stat-card-value info" id="repo-count">{{stats.repo_count}}</div>
+            <div class="stat-card-value info">12</div>
             <div class="stat-card-footer">
                 Being monitored
             </div>
@@ -107,136 +101,86 @@
     <div class="table-container">
         <h2><i class="fa-solid fa-table"></i> Repository Details</h2>
         <table>
-        <tr>
-            <th colspan="1" scope="colgroup" style="width:150px">Repository</th>
-            <th colspan="1" scope="colgroup" style="width:50px">Copier<br>Version</th>
-            {%- if contains_smoke %}
-            <th colspan="3" scope="colgroup">Nightly Test</th>
-            {%- endif %}
-            {%- if contains_bench %}
-            <th colspan="3" scope="colgroup">Nightly<br>Benchmarks</th>
-            {%- endif %}
-            {%- if contains_docs %}
-            <th colspan="3" scope="colgroup">Build Docs</th>
-            {%- endif %}
-            {%- if contains_live %}
-            <th colspan="3" scope="colgroup">Live Build</th>
-            {%- endif %}
-            {%- if contains_other %}
-            <th colspan="1" scope="colgroup">Other Workflows</th>
-            {%- endif %}
-        </tr>
-    </tr>
-
-    {% for project in all_projects %}
-    <tr>
-        <td><a href="{{project.repo_url}}">{{project.repo}}</a></td>
-        <td class="{{project.copier_version_display_class}}">{{project.copier_version}}</td>
-
-        {%- if contains_smoke %}
-        <!-- Smoke Test -->
-        <td class="{{project.smoke_test.display_class}} align-right">
-            {%- if project.smoke_test.is_stale %}
-            <span class="gray-cell">stale</span><br/>
-            {%- endif %}
-            {{project.smoke_test.workflow_status}}
-        </td>
-        <td class="{{project.smoke_test.display_class}} align-center">
-            {%- if project.smoke_test.is_stale %}
-            <i class="gray-cell fa-solid fa-clock"></i><br/>
-            {%- endif %}
-            <i class="{{project.smoke_test.icon_class}}"></i>
-        </td>
-        <td class="{{project.smoke_test.display_class}}">
-            <a href="{{project.smoke_test.workflow_url}}">
-                {{project.smoke_test.conclusion_time}}
-            </a>
-        </td>
-        {%- endif %}
-
-        {%- if contains_bench %}
-        <!-- Benchmarks -->
-        <td class="{{project.benchmarks.display_class}} align-right">
-            {%- if project.benchmarks.is_stale %}
-            <span class="gray-cell">stale</span><br/>
-            {%- endif %}
-            {{project.benchmarks.workflow_status}}
-        </td>
-        <td class="{{project.benchmarks.display_class}} align-center">
-            {%- if project.benchmarks.is_stale %}
-            <i class="gray-cell fa-solid fa-clock"></i><br/>
-            {%- endif %}
-            <i class="{{project.benchmarks.icon_class}}"></i>
-        </td>
-        <td class="{{project.benchmarks.display_class}}">
-            <a href="{{project.benchmarks.workflow_url}}">
-                {{project.benchmarks.conclusion_time}}
-            </a>
-        </td>
-        {%- endif %}
-
-        {%- if contains_docs %}
-        <!-- Build Docs (don't worry about is_stale here) -->
-        <td class="{{project.build_docs.display_class}} align-right">
-            {{project.build_docs.workflow_status}}
-        </td>
-        <td class="{{project.build_docs.display_class}} align-center">
-            <i class="{{project.build_docs.icon_class}}"></i>
-        </td>
-        <td class="{{project.build_docs.display_class}}">
-            <a href="{{project.build_docs.workflow_url}}">
-                {{project.build_docs.conclusion_time}}
-            </a>
-        </td>
-        {%- endif %}
-
-        {%- if contains_live %}
-        <!-- Live Build -->
-        <td class="{{project.live_build.display_class}} align-right">
-            {%- if project.live_build.is_stale %}
-            <span class="gray-cell">stale</span><br/>
-            {%- endif %}
-            {{project.live_build.workflow_status}}
-        </td>
-        <td class="{{project.live_build.display_class}} align-center">
-            {%- if project.live_build.is_stale %}
-            <i class="gray-cell fa-solid fa-clock"></i><br/>
-            {%- endif %}
-            <i class="{{project.live_build.icon_class}}"></i>
-        </td>
-        <td class="{{project.live_build.display_class}}">
-            <a href="{{project.live_build.workflow_url}}">
-                {{project.live_build.conclusion_time}}
-            </a>
-        </td>
-        {%- endif %}
-        
-        {%- if contains_other %}
-        <!-- Other -->
-        <td>
-            {% for workflow in project.other_workflows %}
-                <a href="{{workflow.workflow_url}}">{{workflow.friendly_name}}</a>
-                <br/>
-                <div class="{{workflow.display_class}} inline">{{workflow.workflow_status}} <i class="{{workflow.icon_class}}"></i></div>
-                <div class="inline"><a href="{{workflow.workflow_url}}">{{workflow.conclusion_time_one_line}}</a></div>
-                <br/>
-            </a>
-            {% endfor %}
-        </td>
-        {%- endif %}
-    </tr>
-    {% endfor %}
-    </table>
+            <tr>
+                <th>Repository</th>
+                <th>Copier<br>Version</th>
+                <th colspan="3">Nightly Test</th>
+                <th colspan="3">Build Docs</th>
+                <th colspan="3">Live Build</th>
+            </tr>
+            <tr>
+                <td><a href="https://github.com/lincc-frameworks/tape">tape</a></td>
+                <td class="green-cell">0.3.0</td>
+                <td class="green-cell align-right">success</td>
+                <td class="green-cell align-center"><i class="fa-solid fa-circle-check"></i></td>
+                <td class="green-cell"><a href="#">2 hours ago</a></td>
+                <td class="green-cell align-right">success</td>
+                <td class="green-cell align-center"><i class="fa-solid fa-circle-check"></i></td>
+                <td class="green-cell"><a href="#">1 day ago</a></td>
+                <td class="green-cell align-right">success</td>
+                <td class="green-cell align-center"><i class="fa-solid fa-circle-check"></i></td>
+                <td class="green-cell"><a href="#">3 hours ago</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://github.com/lincc-frameworks/lsdb">lsdb</a></td>
+                <td class="yellow-cell">0.2.8</td>
+                <td class="red-cell align-right">failure</td>
+                <td class="red-cell align-center"><i class="fa-solid fa-circle-xmark"></i></td>
+                <td class="red-cell"><a href="#">30 minutes ago</a></td>
+                <td class="green-cell align-right">success</td>
+                <td class="green-cell align-center"><i class="fa-solid fa-circle-check"></i></td>
+                <td class="green-cell"><a href="#">2 hours ago</a></td>
+                <td class="green-cell align-right">success</td>
+                <td class="green-cell align-center"><i class="fa-solid fa-circle-check"></i></td>
+                <td class="green-cell"><a href="#">1 hour ago</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://github.com/lincc-frameworks/nested-pandas">nested-pandas</a></td>
+                <td class="green-cell">0.3.0</td>
+                <td class="green-cell align-right"><span class="gray-cell">stale</span><br/>success</td>
+                <td class="green-cell align-center"><i class="gray-cell fa-solid fa-clock"></i><br/><i class="fa-solid fa-circle-check"></i></td>
+                <td class="green-cell"><a href="#">7 days ago</a></td>
+                <td class="green-cell align-right">success</td>
+                <td class="green-cell align-center"><i class="fa-solid fa-circle-check"></i></td>
+                <td class="green-cell"><a href="#">1 day ago</a></td>
+                <td class="green-cell align-right">success</td>
+                <td class="green-cell align-center"><i class="fa-solid fa-circle-check"></i></td>
+                <td class="green-cell"><a href="#">5 hours ago</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://github.com/lincc-frameworks/hipscat">hipscat</a></td>
+                <td class="green-cell">0.3.0</td>
+                <td class="green-cell align-right">success</td>
+                <td class="green-cell align-center"><i class="fa-solid fa-circle-check"></i></td>
+                <td class="green-cell"><a href="#">4 hours ago</a></td>
+                <td class="green-cell align-right">success</td>
+                <td class="green-cell align-center"><i class="fa-solid fa-circle-check"></i></td>
+                <td class="green-cell"><a href="#">6 hours ago</a></td>
+                <td class="green-cell align-right">success</td>
+                <td class="green-cell align-center"><i class="fa-solid fa-circle-check"></i></td>
+                <td class="green-cell"><a href="#">2 hours ago</a></td>
+            </tr>
+            <tr>
+                <td><a href="https://github.com/lincc-frameworks/rail">rail</a></td>
+                <td class="green-cell">0.3.0</td>
+                <td class="red-cell align-right">failure</td>
+                <td class="red-cell align-center"><i class="fa-solid fa-circle-xmark"></i></td>
+                <td class="red-cell"><a href="#">1 hour ago</a></td>
+                <td class="green-cell align-right">success</td>
+                <td class="green-cell align-center"><i class="fa-solid fa-circle-check"></i></td>
+                <td class="green-cell"><a href="#">3 hours ago</a></td>
+                <td class="green-cell align-right">success</td>
+                <td class="green-cell align-center"><i class="fa-solid fa-circle-check"></i></td>
+                <td class="green-cell"><a href="#">4 hours ago</a></td>
+            </tr>
+        </table>
     </div>
 
     <!-- Footer -->
     <div class="footer">
         <p>
-            <i class="fa-solid fa-clock"></i> Last Updated {{last_updated}} | 
-            <a href='https://github.com/lincc-frameworks/{{dash_repo}}'><i class="fa-brands fa-github"></i> {{dash_repo}}</a>
-            {% for link in extra_links %}
-            | <a href='{{link.url}}'><i class="fa-brands fa-github"></i> {{link.text}}</a>
-            {% endfor %}
+            <i class="fa-solid fa-clock"></i> Last Updated 17:42 February 27, 2026 (US-NYC) | 
+            <a href='https://github.com/lincc-frameworks/lf-workflow-dash'><i class="fa-brands fa-github"></i> lf-workflow-dash</a>
         </p>
     </div>
 </div>
@@ -250,12 +194,7 @@
         data: {
             labels: ['Passing', 'Failing', 'Stale', 'Pending'],
             datasets: [{
-                data: [
-                    {{stats.passing_count}}, 
-                    {{stats.failing_count}}, 
-                    {{stats.stale_count}}, 
-                    {{stats.pending_count}}
-                ],
+                data: [42, 5, 3, 0],
                 backgroundColor: [
                     'rgba(72, 187, 120, 0.9)',
                     'rgba(252, 129, 129, 0.9)',
@@ -311,30 +250,18 @@
     new Chart(repoCtx, {
         type: 'bar',
         data: {
-            labels: [
-                {%- for project in all_projects %}
-                '{{project.repo}}'{% if not loop.last %},{% endif %}
-                {%- endfor %}
-            ],
+            labels: ['tape', 'lsdb', 'nested-pandas', 'hipscat', 'rail', 'qp', 'tables_io', 'lsst-tables', 'lf-workflow-dash', 'kbmod', 'sorcha', 'tmpl'],
             datasets: [
                 {
                     label: 'Passing',
-                    data: [
-                        {%- for project in all_projects %}
-                        {{project.passing_workflows}}{% if not loop.last %},{% endif %}
-                        {%- endfor %}
-                    ],
+                    data: [3, 2, 3, 4, 2, 3, 3, 4, 2, 3, 4, 3],
                     backgroundColor: 'rgba(72, 187, 120, 0.9)',
                     borderColor: '#48bb78',
                     borderWidth: 0
                 },
                 {
                     label: 'Failing',
-                    data: [
-                        {%- for project in all_projects %}
-                        {{project.failing_workflows}}{% if not loop.last %},{% endif %}
-                        {%- endfor %}
-                    ],
+                    data: [0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0],
                     backgroundColor: 'rgba(252, 129, 129, 0.9)',
                     borderColor: '#fc8181',
                     borderWidth: 0
