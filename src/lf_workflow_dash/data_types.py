@@ -6,6 +6,70 @@ import pytz
 import yaml
 
 
+def calculate_statistics(all_projects):
+    """Calculate aggregate statistics across all projects.
+    
+    Args:
+        all_projects (list): List of ProjectData objects
+        
+    Returns:
+        dict: Dictionary containing statistics
+    """
+    passing_count = 0
+    failing_count = 0
+    stale_count = 0
+    pending_count = 0
+    total_workflows = 0
+    
+    for project in all_projects:
+        # Check all workflow types
+        workflows = []
+        if project.smoke_test:
+            workflows.append(project.smoke_test)
+        if project.build_docs:
+            workflows.append(project.build_docs)
+        if project.benchmarks:
+            workflows.append(project.benchmarks)
+        if project.live_build:
+            workflows.append(project.live_build)
+        workflows.extend(project.other_workflows)
+        
+        project_passing = 0
+        project_failing = 0
+        
+        for workflow in workflows:
+            total_workflows += 1
+            if workflow.workflow_status == "success":
+                passing_count += 1
+                project_passing += 1
+            elif workflow.workflow_status == "failure":
+                failing_count += 1
+                project_failing += 1
+            elif workflow.workflow_status == "pending":
+                pending_count += 1
+            
+            if workflow.is_stale:
+                stale_count += 1
+        
+        # Store per-project statistics
+        project.passing_workflows = project_passing
+        project.failing_workflows = project_failing
+    
+    passing_percent = round((passing_count / total_workflows * 100) if total_workflows > 0 else 0, 1)
+    failing_percent = round((failing_count / total_workflows * 100) if total_workflows > 0 else 0, 1)
+    
+    return {
+        "passing_count": passing_count,
+        "failing_count": failing_count,
+        "stale_count": stale_count,
+        "pending_count": pending_count,
+        "total_workflows": total_workflows,
+        "passing_percent": passing_percent,
+        "failing_percent": failing_percent,
+        "repo_count": len(all_projects)
+    }
+
+
 @dataclass
 class WorkflowElemData:
     """Per-workflow information"""
@@ -30,7 +94,7 @@ class WorkflowElemData:
         self.workflow_url = f"{repo_url}/actions/workflows/{self.workflow_name}"
         self.workflow_status = "pending"
         self.display_class = "yellow-cell"
-        self.icon_class = "fa fa-question-circle"
+        self.icon_class = "fa-solid fa-circle-question"
         self.branch = branch
 
     def set_status(self, status, conclusion_time, is_stale):
@@ -48,10 +112,10 @@ class WorkflowElemData:
         self.is_stale = is_stale
         if status == "success":
             self.display_class = "green-cell"
-            self.icon_class = "fa fa-check-circle"
+            self.icon_class = "fa-solid fa-circle-check"
         elif status == "failure":
             self.display_class = "red-cell"
-            self.icon_class = "fa fa-times-circle"
+            self.icon_class = "fa-solid fa-circle-xmark"
 
 
 @dataclass
@@ -64,6 +128,10 @@ class ProjectData:
     repo_url: str = ""
     copier_version: str = ""
     copier_version_display_class: str = "yellow-cell"
+    
+    # Per-project workflow counts for charts
+    passing_workflows: int = 0
+    failing_workflows: int = 0
 
     smoke_test: WorkflowElemData = None
     build_docs: WorkflowElemData = None
