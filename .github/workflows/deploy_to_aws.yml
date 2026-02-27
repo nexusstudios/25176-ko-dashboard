@@ -25,7 +25,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
             name: dashboard
-            path: html/index.html
+            path: html/
             retention-days: 30
     #   - name: Configure AWS
     #     uses: aws-actions/configure-aws-credentials@v4
@@ -34,6 +34,6 @@ jobs:
     #       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     #       aws-region: us-east-1
     #   - name: Deploy to S3
-    #     run: aws s3 cp index.html s3://${{ secrets.AWS_BUCKET_NAME }}/index.html
+    #     run: aws s3 sync html/ s3://${{ secrets.AWS_BUCKET_NAME }}/ --delete
     #   - name: Invalidate CloudFront
     #     run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DIST_ID }} --paths "/*"
