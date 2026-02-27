@@ -194,36 +194,46 @@ def read_yaml_file(file_path):
     for item in repos:
         owner = item["owner"]
         repo = item["repo"]
+        display_name = item.get("display_name", repo)  # Optional display name
         project_data = ProjectData(owner=owner, repo=repo)
+        
+        # Override repo display name if provided
+        if display_name != repo:
+            project_data.repo = display_name
 
         if "smoke-test" in item:
+            branch = item.get("smoke-test-branch", "main")
             project_data.smoke_test = WorkflowElemData(
-                item["smoke-test"], repo_url=project_data.repo_url, owner=owner, repo=repo
+                item["smoke-test"], repo_url=project_data.repo_url, owner=owner, repo=repo, branch=branch
             )
             contains_smoke = True
         if "build-docs" in item:
+            branch = item.get("build-docs-branch", "main")
             project_data.build_docs = WorkflowElemData(
-                item["build-docs"], repo_url=project_data.repo_url, owner=owner, repo=repo
+                item["build-docs"], repo_url=project_data.repo_url, owner=owner, repo=repo, branch=branch
             )
             contains_docs = True
         if "benchmarks" in item:
+            branch = item.get("benchmarks-branch", "main")
             project_data.benchmarks = WorkflowElemData(
-                item["benchmarks"], repo_url=project_data.repo_url, owner=owner, repo=repo
+                item["benchmarks"], repo_url=project_data.repo_url, owner=owner, repo=repo, branch=branch
             )
             contains_bench = True
         if "live-build" in item:
+            branch = item.get("live-build-branch", "main")
             project_data.live_build = WorkflowElemData(
                 item["live-build"],
                 repo_url=project_data.repo_url,
                 owner=owner,
                 repo=repo,
-                branch="main",
+                branch=branch,
             )
             contains_live = True
         if "other_workflows" in item:
             for name in item["other_workflows"]:
+                branch = item.get("other_workflows-branch", "main")
                 project_data.other_workflows.append(
-                    WorkflowElemData(name, repo_url=project_data.repo_url, owner=owner, repo=repo)
+                    WorkflowElemData(name, repo_url=project_data.repo_url, owner=owner, repo=repo, branch=branch)
                 )
             contains_other = True
 

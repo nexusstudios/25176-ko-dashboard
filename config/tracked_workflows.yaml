@@ -7,18 +7,26 @@ repos:
     smoke-test: ci.yml
     live-build: cd.yml
   - repo: 25176-ko-cxs
+    owner: nexusstudios
     smoke-test: ci.yml
     live-build: cd.yml
-    owner: nexusstudios
-  - repo: knockout Core Product
+  - repo: knockout
+    display_name: "Knockout Core Product"
+    owner: facebookexternal
     live-build: build-apk.yml
+    live-build-branch: release-product
+  - repo: knockout
+    display_name: "Knockout Demo"
     owner: facebookexternal
-  - repo: knockout Demo
     live-build: build-demo-apk.yml
+    live-build-branch: release-demo
+  - repo: knockout
+    display_name: "Knockout Demo NFL"
     owner: facebookexternal
-  - repo: knockout Demo NFL
     live-build: build-demo-nfl-apk.yml
+    live-build-branch: release-demo-nfl
+  - repo: knockout
+    display_name: "Knockout Demo MLB"
     owner: facebookexternal
-  - repo: knockout NBA
-    live-build: build-demo-nba-apk.yml
-    owner: facebookexternal
+    live-build: build-demo-mlb-apk.yml
+    live-build-branch: release-demo-mlb
