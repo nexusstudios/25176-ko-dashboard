@@ -10,7 +10,15 @@ repos:
     smoke-test: ci.yml
     live-build: cd.yml
     owner: nexusstudios
-  - repo: knockout
-    smoke-test: build-demo-apk.yml
+  - repo: knockout Core Product
+    live-build: build-apk.yml
+    owner: facebookexternal
+  - repo: knockout Demo
     live-build: build-demo-apk.yml
+    owner: facebookexternal
+  - repo: knockout Demo NFL
+    live-build: build-demo-nfl-apk.yml
+    owner: facebookexternal
+  - repo: knockout NBA
+    live-build: build-demo-nba-apk.yml
     owner: facebookexternal
