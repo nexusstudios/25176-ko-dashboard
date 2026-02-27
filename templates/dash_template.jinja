@@ -1,19 +1,112 @@
 <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>{{page_title}}</title>
-        <link rel="icon" type="image/x-icon" href="img/favicon.png">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="css/styles.css">
-        <script>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{page_title}}</title>
+    <link rel="icon" type="image/x-icon" href="img/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
         setTimeout(function(){
             window.location.reload();
         }, 60000);
-        </script>
-    </head>
-    <body>
-    <table>
+    </script>
+</head>
+<body>
+<div class="container">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <h1><i class="fa-solid fa-chart-line"></i> {{page_title}}</h1>
+        <p>Comprehensive GitHub Actions Workflow Monitoring</p>
+    </div>
+
+    <!-- Summary Statistics -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon success">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div class="stat-card-content">
+                    <h3>Passing Workflows</h3>
+                </div>
+            </div>
+            <div class="stat-card-value success" id="passing-count">{{stats.passing_count}}</div>
+            <div class="stat-card-footer">
+                {{stats.passing_percent}}% of total workflows
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon danger">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+                <div class="stat-card-content">
+                    <h3>Failing Workflows</h3>
+                </div>
+            </div>
+            <div class="stat-card-value danger" id="failing-count">{{stats.failing_count}}</div>
+            <div class="stat-card-footer">
+                {{stats.failing_percent}}% require attention
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon warning">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="stat-card-content">
+                    <h3>Stale Workflows</h3>
+                </div>
+            </div>
+            <div class="stat-card-value warning" id="stale-count">{{stats.stale_count}}</div>
+            <div class="stat-card-footer">
+                Not run recently
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon info">
+                    <i class="fa-brands fa-github"></i>
+                </div>
+                <div class="stat-card-content">
+                    <h3>Total Repositories</h3>
+                </div>
+            </div>
+            <div class="stat-card-value info" id="repo-count">{{stats.repo_count}}</div>
+            <div class="stat-card-footer">
+                Being monitored
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3><i class="fa-solid fa-chart-pie"></i> Workflow Status Distribution</h3>
+                <div class="chart-container">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3><i class="fa-solid fa-chart-bar"></i> Status by Repository</h3>
+                <div class="chart-container">
+                    <canvas id="repoChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Table -->
+    <div class="table-container">
+        <h2><i class="fa-solid fa-table"></i> Repository Details</h2>
+        <table>
         <tr>
             <th colspan="1" scope="colgroup" style="width:150px">Repository</th>
             <th colspan="1" scope="colgroup" style="width:50px">Copier<br>Version</th>
@@ -50,7 +143,7 @@
         </td>
         <td class="{{project.smoke_test.display_class}} align-center">
             {%- if project.smoke_test.is_stale %}
-            <i class="gray-cell fa fa-clock-o"></i><br/>
+            <i class="gray-cell fa-solid fa-clock"></i><br/>
             {%- endif %}
             <i class="{{project.smoke_test.icon_class}}"></i>
         </td>
@@ -71,7 +164,7 @@
         </td>
         <td class="{{project.benchmarks.display_class}} align-center">
             {%- if project.benchmarks.is_stale %}
-            <i class="gray-cell fa fa-clock-o"></i><br/>
+            <i class="gray-cell fa-solid fa-clock"></i><br/>
             {%- endif %}
             <i class="{{project.benchmarks.icon_class}}"></i>
         </td>
@@ -107,7 +200,7 @@
         </td>
         <td class="{{project.live_build.display_class}} align-center">
             {%- if project.live_build.is_stale %}
-            <i class="gray-cell fa fa-clock-o"></i><br/>
+            <i class="gray-cell fa-solid fa-clock"></i><br/>
             {%- endif %}
             <i class="{{project.live_build.icon_class}}"></i>
         </td>
@@ -134,14 +227,161 @@
     </tr>
     {% endfor %}
     </table>
+    </div>
 
-    <p>
-        Last Updated {{last_updated}} | 
-        <a href='https://github.com/lincc-frameworks/{{dash_repo}}'><i class=\"fa fa-github\"></i> {{dash_repo}}</a>
-        {% for link in extra_links %}
-        | <a href='{{link.url}}'><i class=\"fa fa-github\"></i> {{link.text}}</a>
-        {% endfor %}
-    </p>
+    <!-- Footer -->
+    <div class="footer">
+        <p>
+            <i class="fa-solid fa-clock"></i> Last Updated {{last_updated}} | 
+            <a href='https://github.com/lincc-frameworks/{{dash_repo}}'><i class="fa-brands fa-github"></i> {{dash_repo}}</a>
+            {% for link in extra_links %}
+            | <a href='{{link.url}}'><i class="fa-brands fa-github"></i> {{link.text}}</a>
+            {% endfor %}
+        </p>
+    </div>
+</div>
 
-    </body>
+<!-- Chart.js Configuration -->
+<script>
+    // Status Distribution Pie Chart
+    const statusCtx = document.getElementById('statusChart');
+    new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Passing', 'Failing', 'Stale', 'Pending'],
+            datasets: [{
+                data: [
+                    {{stats.passing_count}}, 
+                    {{stats.failing_count}}, 
+                    {{stats.stale_count}}, 
+                    {{stats.pending_count}}
+                ],
+                backgroundColor: [
+                    'rgba(63, 185, 80, 0.8)',
+                    'rgba(248, 81, 73, 0.8)',
+                    'rgba(210, 153, 34, 0.8)',
+                    'rgba(88, 166, 255, 0.8)'
+                ],
+                borderColor: [
+                    '#3fb950',
+                    '#f85149',
+                    '#d29922',
+                    '#58a6ff'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#e6edf3',
+                        padding: 15,
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#161b22',
+                    titleColor: '#e6edf3',
+                    bodyColor: '#e6edf3',
+                    borderColor: '#30363d',
+                    borderWidth: 1,
+                    padding: 12,
+                    displayColors: true
+                }
+            }
+        }
+    });
+
+    // Repository Status Bar Chart
+    const repoCtx = document.getElementById('repoChart');
+    new Chart(repoCtx, {
+        type: 'bar',
+        data: {
+            labels: [
+                {%- for project in all_projects %}
+                '{{project.repo}}'{% if not loop.last %},{% endif %}
+                {%- endfor %}
+            ],
+            datasets: [
+                {
+                    label: 'Passing',
+                    data: [
+                        {%- for project in all_projects %}
+                        {{project.passing_workflows}}{% if not loop.last %},{% endif %}
+                        {%- endfor %}
+                    ],
+                    backgroundColor: 'rgba(63, 185, 80, 0.8)',
+                    borderColor: '#3fb950',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Failing',
+                    data: [
+                        {%- for project in all_projects %}
+                        {{project.failing_workflows}}{% if not loop.last %},{% endif %}
+                        {%- endfor %}
+                    ],
+                    backgroundColor: 'rgba(248, 81, 73, 0.8)',
+                    borderColor: '#f85149',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    stacked: true,
+                    ticks: {
+                        color: '#7d8590',
+                        maxRotation: 45,
+                        minRotation: 45
+                    },
+                    grid: {
+                        color: '#30363d'
+                    }
+                },
+                y: {
+                    stacked: true,
+                    ticks: {
+                        color: '#7d8590',
+                        stepSize: 1
+                    },
+                    grid: {
+                        color: '#30363d'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#e6edf3',
+                        padding: 15,
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#161b22',
+                    titleColor: '#e6edf3',
+                    bodyColor: '#e6edf3',
+                    borderColor: '#30363d',
+                    borderWidth: 1,
+                    padding: 12
+                }
+            }
+        }
+    });
+</script>
+
+</body>
 </html>

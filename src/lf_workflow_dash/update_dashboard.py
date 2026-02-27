@@ -1,6 +1,6 @@
 from jinja2 import Environment, FileSystemLoader
 
-from lf_workflow_dash.data_types import read_yaml_file
+from lf_workflow_dash.data_types import calculate_statistics, read_yaml_file
 from lf_workflow_dash.github_request import get_copier_version, update_copier_version, update_workflow_status
 
 
@@ -46,4 +46,9 @@ def do_the_work(token, datafile, outfile):  # pragma: no cover
     context = read_yaml_file(datafile)
     get_copier_version(context, token)
     update_status(context, token)
+    
+    # Calculate statistics after updating status
+    stats = calculate_statistics(context["all_projects"])
+    context["stats"] = stats
+    
     update_html(outfile, context)
