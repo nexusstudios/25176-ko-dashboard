@@ -6,10 +6,12 @@ repos:
     owner: nexusstudios
     smoke-test: ci.yml
     live-build: cd.yml
+    live-build-branch: dev
   - repo: 25176-ko-cxs
     owner: nexusstudios
     smoke-test: ci.yml
     live-build: cd.yml
+    live-build-branch: dev
   - repo: knockout
     display_name: "Knockout Core Product"
     owner: facebookexternal
