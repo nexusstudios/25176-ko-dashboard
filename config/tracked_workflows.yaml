@@ -4,13 +4,11 @@ copier_project: lincc-frameworks/python-project-template
 repos:  
   - repo: 25176-ko-server
     owner: nexusstudios
-    smoke-test: ci.yml
-    live-build: cd.yml
+    live-build: ci.yml
     live-build-branch: dev
   - repo: 25176-ko-cxs
     owner: nexusstudios
-    smoke-test: ci.yml
-    live-build: cd.yml
+    live-build: ci.yml
     live-build-branch: dev
   - repo: knockout
     display_name: "Knockout Core Product"
