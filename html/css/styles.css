@@ -82,8 +82,8 @@ body {
 /* Header Section */
 .dashboard-header {
   text-align: center;
-  margin-bottom: 50px;
-  padding: 50px 30px;
+  margin-bottom: 28px;
+  padding: 24px 20px;
   background: var(--gradient-primary);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-highlight);
@@ -104,9 +104,9 @@ body {
 }
 
 .dashboard-header h1 {
-  font-size: 3em;
+  font-size: 1.75em;
   font-weight: 800;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   color: white;
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
   position: relative;
@@ -115,7 +115,7 @@ body {
 }
 
 .dashboard-header h1 i {
-  margin-right: 15px;
+  margin-right: 10px;
   animation: pulse 2s ease-in-out infinite;
 }
 
@@ -126,13 +126,56 @@ body {
 
 .dashboard-header p {
   color: rgba(255, 255, 255, 0.95);
-  font-size: 1.3em;
+  font-size: 0.98em;
   text-align: center;
   margin: 0;
-  font-weight: 500;
+  font-weight: 600;
   position: relative;
   z-index: 1;
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+}
+
+.header-meta {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.header-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.82em;
+  font-weight: 700;
+  color: #eef2ff;
+  background: rgba(10, 14, 26, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.header-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.82em;
+  font-weight: 700;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.header-jump:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.16);
 }
 
 /* Stats Summary Cards */
@@ -532,15 +575,25 @@ a:hover {
   }
   
   .dashboard-header {
-    padding: 30px 20px;
+    padding: 18px 14px;
   }
   
   .dashboard-header h1 {
-    font-size: 2em;
+    font-size: 1.35em;
   }
   
   .dashboard-header p {
-    font-size: 1em;
+    font-size: 0.9em;
+  }
+
+  .header-meta {
+    gap: 8px;
+  }
+
+  .header-chip,
+  .header-jump {
+    font-size: 0.76em;
+    padding: 5px 10px;
   }
   
   .stats-grid {
@@ -589,11 +642,11 @@ a:hover {
   }
   
   .dashboard-header {
-    padding: 60px 40px;
+    padding: 30px 28px;
   }
   
   .dashboard-header h1 {
-    font-size: 3.5em;
+    font-size: 2.2em;
   }
 }
 

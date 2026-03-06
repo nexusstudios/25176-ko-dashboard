@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LF Workflow Dashboard - Enhanced Preview</title>
+    <title>Knockout Build Dashboard | Workflow Health - Enhanced Preview</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -12,8 +12,12 @@
 <div class="container">
     <!-- Dashboard Header -->
     <div class="dashboard-header">
-        <h1><i class="fa-solid fa-chart-line"></i> LF Workflow Dashboard</h1>
-        <p>Comprehensive GitHub Actions Workflow Monitoring</p>
+        <h1><i class="fa-solid fa-chart-line"></i> Knockout Build Dashboard</h1>
+        <p>Live GitHub Actions health across monitored repositories</p>
+        <div class="header-meta">
+            <span class="header-chip"><i class="fa-solid fa-rotate"></i> Auto-refresh: 30m</span>
+            <a class="header-jump" href="#repository-details"><i class="fa-solid fa-arrow-down"></i> Jump to repository details</a>
+        </div>
     </div>
 
     <!-- Summary Statistics -->
@@ -98,7 +102,7 @@
     </div>
 
     <!-- Detailed Table -->
-    <div class="table-container">
+    <div class="table-container" id="repository-details">
         <h2><i class="fa-solid fa-table"></i> Repository Details</h2>
         <table>
             <tr>
