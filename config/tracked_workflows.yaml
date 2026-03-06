@@ -6,8 +6,8 @@ repos:
     owner: nexusstudios
     live-build: ci.yml
     live-build-branch: dev
-  - repo: 25176-ko-cxs
-    owner: nexusstudios
+  - repo: knockout-backend
+    owner: facebookexternal
     live-build: ci.yml
     live-build-branch: dev
   - repo: knockout
